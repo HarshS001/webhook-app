@@ -14,7 +14,6 @@ public class WebhookService {
     private final RestTemplate restTemplate = new RestTemplate();
 
     public void processWebhook() {
-        // Step 1: Generate Webhook
         String generateWebhookUrl = "https://bfhldevapigw.healthrx.co.in/hiring/generateWebhook/JAVA";
 
         Map<String, String> requestBody = new HashMap<>();
@@ -34,7 +33,6 @@ public class WebhookService {
             System.out.println("Webhook URL: " + webhookResponse.getWebhook());
             System.out.println("AccessToken: " + webhookResponse.getAccessToken());
 
-            // Step 2: Prepare Final SQL (for odd regNo -> Question 1)
             String finalSQL = "SELECT p.AMOUNT AS SALARY, " +
                     "CONCAT(e.FIRST_NAME, ' ', e.LAST_NAME) AS NAME, " +
                     "TIMESTAMPDIFF(YEAR, e.DOB, CURDATE()) AS AGE, " +
@@ -46,7 +44,6 @@ public class WebhookService {
                     "ORDER BY p.AMOUNT DESC " +
                     "LIMIT 1;";
 
-            // Step 3: Submit Final SQL
             submitFinalQuery(webhookResponse.getWebhook(), webhookResponse.getAccessToken(), finalSQL);
         } else {
             System.err.println("Failed to generate webhook");
@@ -56,7 +53,7 @@ public class WebhookService {
     private void submitFinalQuery(String webhookUrl, String accessToken, String finalQuery) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(accessToken); // JWT in Authorization header
+        headers.setBearerAuth(accessToken); 
 
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("finalQuery", finalQuery);
